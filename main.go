@@ -19,7 +19,7 @@ func getCntName() string {
   if cntName == "" {
     cntName = "unkown"
   }
-  return cntname
+  return cntName
 }
 
 // https://blog.golang.org/context/userip/userip.go
