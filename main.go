@@ -89,6 +89,6 @@ func main() {
     if err != nil {
         log.Fatal(err)
     }
-    log.Printf("Start Webserver on %s (v0.1.1)", addr)
+    log.Printf("Start Webserver on %s (v0.1.2)", addr)
     log.Fatal(http.Serve(l, r))
 }
