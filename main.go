@@ -10,14 +10,21 @@ import (
     "bytes"
     "os/exec"
     "strings"
+    "regexp"
     // Third party packages
     "github.com/julienschmidt/httprouter"
+)
+
+var (
+  envReg = regexp.MustCompile(`^(NVIDIA|HOUDINI)`)
 )
 
 func getEnv() string {
   res := []string{}
   for _, e := range os.Environ() {
-    res = append(res, e)
+    if envReg.MatchString(e) {
+      res = append(res, e)
+    }
   }
   return strings.Join(res, ",")
 }
@@ -72,7 +79,7 @@ func getGPUs(w http.ResponseWriter, req *http.Request, _ httprouter.Params){
     fmt.Fprintf(w, "%s: %s", getCntName(), err.Error())
     return
   }
-  fmt.Fprintf(w, "%s: %s", getCntName(), getEnv())
+  fmt.Fprintf(w, "%s: %s\n", getCntName(), getEnv())
   fmt.Fprintf(w, string(cmdOutput.Bytes()))
 }
 
