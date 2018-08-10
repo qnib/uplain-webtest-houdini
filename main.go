@@ -14,6 +14,13 @@ import (
 )
 
 
+func getCntName() string {
+  cntName := os.Getenv("CONTAINER_NAME")
+  if cntName == "" {
+    cntName = "unkown"
+  }
+  return cntname
+}
 
 // https://blog.golang.org/context/userip/userip.go
 func getIP(w http.ResponseWriter, req *http.Request, _ httprouter.Params){
@@ -21,11 +28,7 @@ func getIP(w http.ResponseWriter, req *http.Request, _ httprouter.Params){
     if podName == "" {
       podName = "unkown"
     }
-    cntName := os.Getenv("CONTAINER_NAME")
-    if cntName == "" {
-      cntName = "unkown"
-    }
-    fmt.Fprintf(w, "You've hit cnt:%s at path:%s on pod:%s\n", cntName, req.URL.Path, podName)
+    fmt.Fprintf(w, "You've hit cnt:%s at path:%s on pod:%s\n", getCntName(), req.URL.Path, podName)
     ip, port, err := net.SplitHostPort(req.RemoteAddr)
     if err != nil {
         fmt.Fprintf(w, "userip: %q is not IP:port", req.RemoteAddr)
@@ -42,11 +45,7 @@ func getIP(w http.ResponseWriter, req *http.Request, _ httprouter.Params){
 }
 
 func getName(w http.ResponseWriter, req *http.Request, _ httprouter.Params){
-  cntName := os.Getenv("CONTAINER_NAME")
-  if cntName == "" {
-    cntName = "unkown"
-  }
-  fmt.Fprintf(w, "cnt:%s\n", cntName)
+  fmt.Fprintf(w, "container: %s\n", getCntName())
 }
 
 func getGPUs(w http.ResponseWriter, req *http.Request, _ httprouter.Params){
@@ -55,10 +54,10 @@ func getGPUs(w http.ResponseWriter, req *http.Request, _ httprouter.Params){
   cmd.Stdout = cmdOutput
   err := cmd.Run()
   if err != nil {
-    fmt.Fprintf(w, err.Error())
+    fmt.Fprintf(w, "%s: %s", getCntName(), err.Error())
+    return
   }
-  fmt.Fprintf(w, string(cmdOutput.Bytes()))
-
+  fmt.Fprintf(w, "%s: %s", getCntName(), string(cmdOutput.Bytes()))
 }
 
 func getTask(w http.ResponseWriter, req *http.Request, _ httprouter.Params){
