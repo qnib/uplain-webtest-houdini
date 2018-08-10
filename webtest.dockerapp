@@ -22,6 +22,7 @@ services:
       CONTAINER_NAME: "{{.Service.Name}}.{{.Task.Slot}}.{{.Task.ID}}"
       SERVICE_NAME: "{{.Service.Name}}"
       TASK_SLOT: "{{.Task.Slot}}"
+      HOUDINI_GPU_ENABLED: "true"
     ports:
       - 9999:9999
 
