@@ -9,14 +9,29 @@ import (
     "net/http"
     "bytes"
     "os/exec"
+    "strings"
     // Third party packages
     "github.com/julienschmidt/httprouter"
 )
 
+func getEnv() string {
+  res := []string{}
+  for _, e := range os.Environ() {
+    res = append(res, e)
+  }
+  return strings.Join(res, ",")
+}
 
 func getCntName() string {
+  hostname, err := os.Hostname()
+  if err != nil {
+  	panic(err)
+  }
   cntName := os.Getenv("CONTAINER_NAME")
   if cntName == "" {
+    if err == nil {
+      cntName = hostname
+    }
     cntName = "unkown"
   }
   return cntName
@@ -57,7 +72,8 @@ func getGPUs(w http.ResponseWriter, req *http.Request, _ httprouter.Params){
     fmt.Fprintf(w, "%s: %s", getCntName(), err.Error())
     return
   }
-  fmt.Fprintf(w, "%s: %s", getCntName(), string(cmdOutput.Bytes()))
+  fmt.Fprintf(w, "%s: %s", getCntName(), getEnv())
+  fmt.Fprintf(w, string(cmdOutput.Bytes()))
 }
 
 func getTask(w http.ResponseWriter, req *http.Request, _ httprouter.Params){
