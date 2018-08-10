@@ -1,5 +1,5 @@
 ---
-version: 0.1.0
+version: 0.1.1
 name: webtest
 description: "Webtest stack with GPU detection"
 maintainers:
@@ -28,4 +28,4 @@ services:
 
 ---
 docker:
-  image: qnib/uplain-webtest-houdini:v0.1.0
+  image: qnib/uplain-webtest-houdini:v0.1.1
