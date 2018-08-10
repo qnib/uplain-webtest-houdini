@@ -1,0 +1,30 @@
+---
+version: 0.0.0
+name: webtest
+description: "Webtest stack with GPU detection"
+maintainers:
+- name: Christian Kniep
+  email: christian@qnib.org
+targets:
+  swarm: true
+  kubernetes: true
+
+---
+
+version: "3.6"
+services:
+  daemon:
+    image: ${docker.image}
+    hostname: "{{.Service.Name}}.{{.Task.Slot}}.{{.Task.ID}}"
+    deploy:
+      replicas: 3
+    environment:
+      CONTAINER_NAME: "{{.Service.Name}}.{{.Task.Slot}}.{{.Task.ID}}"
+      SERVICE_NAME: "{{.Service.Name}}"
+      TASK_SLOT: "{{.Task.Slot}}"
+    ports:
+      - 9999:9999
+
+---
+docker:
+  image: qnib/uplain-webtest-houdini:v0.0.0
